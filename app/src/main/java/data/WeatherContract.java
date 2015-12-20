@@ -13,6 +13,7 @@ import android.text.format.Time;
  */
 public class WeatherContract {
 
+
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
     // content authority is the package name for the app, which is guaranteed to be unique on the
@@ -117,11 +118,8 @@ public class WeatherContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        /*
-            Student: Fill in this buildWeatherLocation function
-         */
         public static Uri buildWeatherLocation(String locationSetting) {
-            return null;
+            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
         }
 
         public static Uri buildWeatherLocationWithStartDate(

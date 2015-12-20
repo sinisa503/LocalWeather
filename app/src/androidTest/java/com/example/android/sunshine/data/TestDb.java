@@ -29,27 +29,20 @@ public class TestDb extends AndroidTestCase {
 
     public static final String LOG_TAG = TestDb.class.getSimpleName();
 
+    /*
+    This function gets called before each test is executed to delete the database.  This makes
+    sure that we always have a clean test.
+ */
+    public void setUp() {
+        deleteTheDatabase();
+    }
+
+
     // Since we want each test to start with a clean slate
     void deleteTheDatabase() {
         mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
     }
 
-    /*
-        This function gets called before each test is executed to delete the database.  This makes
-        sure that we always have a clean test.
-     */
-    public void setUp() {
-        deleteTheDatabase();
-    }
-
-    /*
-        Students: Uncomment this test once you've written the code to create the Location
-        table.  Note that you will have to have chosen the same column names that I did in
-        my solution for this test to compile, so if you haven't yet done that, this is
-        a good time to change your column names to match mine.
-        Note that this only tests that the Location table has the correct columns, since we
-        give you the code for the weather table.  This test does not look at the
-     */
     public void testCreateDb() throws Throwable {
         // build a HashSet of all of the table names we wish to look for
         // Note that there will be another table in the DB that stores the
@@ -61,7 +54,7 @@ public class TestDb extends AndroidTestCase {
         mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new WeatherDbHelper(
                 this.mContext).getWritableDatabase();
-        assertEquals(true, db.isOpen());
+        assertEquals("Database is not created",true, db.isOpen());
 
         // have we created the tables we want?
         Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
@@ -107,12 +100,6 @@ public class TestDb extends AndroidTestCase {
         db.close();
     }
 
-    /*
-        Students:  Here is where you will build code to test that we can insert and query the
-        location database.  We've done a lot of work for you.  You'll want to look in TestUtilities
-        where you can uncomment out the "createNorthPoleLocationValues" function.  You can
-        also make use of the ValidateCurrentRecord function from within TestUtilities.
-    */
     public void testLocationTable() {
         insertLocation();
     }

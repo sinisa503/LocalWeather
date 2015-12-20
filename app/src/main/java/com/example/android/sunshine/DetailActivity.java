@@ -1,12 +1,16 @@
 package com.example.android.sunshine;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import data.WeatherContract;
+
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -24,18 +30,11 @@ public class DetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new DetailFragment())
                     .commit();
         }
-
-        TextView textView = (TextView) findViewById(R.id.txtDetails);
-        Intent i = getIntent();
-        textView.setText(i.getStringExtra("forecast"));
     }
 
 
@@ -51,7 +50,8 @@ public class DetailActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();if (id == R.id.settings) {
+        int id = item.getItemId();
+        if (id == R.id.settings) {
 
             Intent i = new Intent(this, SettingsActivity.class);
             startActivity(i);
@@ -63,28 +63,36 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+        private static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
+        private static final int DETAIL_LOADER = 0;
+        private String mForecast;
+        private ShareActionProvider mShareActionProvider;
 
-        private static final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
-        private static final String FORECAST_SHARE_HASHTAG = "SunshineApp";
-        private String mForecastString;
+        private static final String[]FORECAST_COLUMNS = {
+                WeatherContract.WeatherEntry.TABLE_NAME + "."+ WeatherContract.WeatherEntry._ID,
+                WeatherContract.WeatherEntry.COLUMN_DATE,
+                WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+                WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+                WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+        };
 
-        public PlaceholderFragment() {
+        private static final int COL_WEATHER_ID = 0;
+        private static final int COL_WEATHER_DATE = 1;
+        private static final int COL_WEATHER_DESC = 2;
+        private static final int COL_WEATHER_MAX_TEMP = 3;
+        private static final int COL_WEATHER_MIN_TEMP = 4;
+
+        public DetailFragment(){
             setHasOptionsMenu(true);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
-            Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
-                mForecastString = intent.getStringExtra(Intent.EXTRA_TEXT);
-                TextView detailText = (TextView)rootView.findViewById(R.id.detail_text);
-                detailText.setText(mForecastString);
-            }
-            return rootView;
+            return inflater.inflate(R.layout.fragment_detail, container, false);
         }
 
         @Override
@@ -93,7 +101,7 @@ public class DetailActivity extends ActionBarActivity {
 
             MenuItem menuItem = menu.findItem(R.id.action_share);
 
-            ShareActionProvider mShareActionProvider = (ShareActionProvider)
+            mShareActionProvider = (ShareActionProvider)
                     MenuItemCompat.getActionProvider(menuItem);
 
             if (mShareActionProvider == null){
@@ -102,13 +110,58 @@ public class DetailActivity extends ActionBarActivity {
                 Log.d("Sinisa", "Share action provider is null");
             }
         }
-        private Intent createShareForecastIntent(){
+
+        private Intent createShareForecastIntent() {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT,mForecastString + FORECAST_SHARE_HASHTAG);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, mForecast + FORECAST_SHARE_HASHTAG);
+            return shareIntent;
+        }
 
-            return  shareIntent;
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Log.v(LOG_TAG, "In onCreateLoader");
+            Intent intent = getActivity().getIntent();
+            if (intent == null){
+                return null;
+            }
+            return new CursorLoader(
+                    getActivity(),
+                    intent.getData(),
+                    FORECAST_COLUMNS,
+                    null, null, null
+            );
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            Log.v(LOG_TAG, "onLoadFinished");
+            if (!data.moveToFirst()){return;}
+
+            String dateString = Utility.formatDate(data.getLong(COL_WEATHER_DATE));
+            String weatherDescription = data.getString(COL_WEATHER_DESC);
+            boolean isMetric = Utility.isMetric(getActivity());
+            String high = Utility.formatTemperature(data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
+            String low = Utility.formatTemperature(data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+            mForecast = String.format("%s - %s - %s/%s",dateString, weatherDescription,high,low);
+            TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
+            detailTextView.setText(mForecast);
+
+            if (mShareActionProvider != null){
+                mShareActionProvider.setShareIntent(createShareForecastIntent());
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
         }
     }
 }
