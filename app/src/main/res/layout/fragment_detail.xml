@@ -9,33 +9,29 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/detail_view_day_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/detail_view_day_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/detail_view_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JUNE 24" />
 
-            <TextView
-                android:id="@+id/detail_view_date_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="JUNE 24" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/list_item_high_textview"
@@ -54,52 +50,49 @@
                     android:text="8"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/list_item_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_insert_emoticon_yellow_700_36dp"
-                    android:layout_margin="8dp" />
+                    android:layout_margin="8dp"/>
 
                 <TextView
-                    android:id="@+id/list_item_forecast_textview"
+                    android:id="@+id/detail_view_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="CLEAR" />
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/list_item_humidity_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="8dp"
+            android:text="HUMIDITY: 84%" />
 
-            <TextView
-                android:id="@+id/list_item_humidity_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="HUMIDITY: 84%" />
+        <TextView
+            android:id="@+id/list_item_wind_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="WIND: 6km/H NW" />
 
-            <TextView
-                android:id="@+id/list_item_wind_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="WIND: 6km/H NW" />
+        <TextView
+            android:id="@+id/list_item_pressure_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRESSURE: 1014 hpa" />
 
-            <TextView
-                android:id="@+id/list_item_pressure_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PRESSURE: 1014 hpa" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

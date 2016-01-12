@@ -47,7 +47,9 @@ public class ForecastAdapter extends CursorAdapter{
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
 
-        viewHolder.iconView.setImageResource(R.drawable.ic_insert_emoticon_yellow_700_36dp);
+        viewHolder.iconView.setImageResource(Utility.getImageFromDrawable(cursor.getInt(
+                ForecastFragment.COL_WEATHER_CONDITION_ID
+        )));
 
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
 
