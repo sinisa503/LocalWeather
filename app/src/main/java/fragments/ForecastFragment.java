@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.android.sunshine.DetailActivity;
 import com.example.android.sunshine.ForecastAdapter;
 import com.example.android.sunshine.R;
 import com.example.android.sunshine.SettingsActivity;
@@ -61,6 +60,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private ForecastAdapter mForecastAdapter;
 
+    public interface Callback{
+        void onItemSelected(Uri dateUri);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,11 +90,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                            ));
-                    startActivity(intent);
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+//                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+//                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+//                            ));
+//                    startActivity(intent);
+                    ((Callback)getActivity()).onItemSelected(WeatherContract.WeatherEntry
+                    .buildWeatherLocationWithDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)));
                 }
             }
         });
@@ -129,6 +134,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 return true;
         }
         return false;
+    }
+
+    public void onLocationChanged( ) {
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     private void updateWeather() {

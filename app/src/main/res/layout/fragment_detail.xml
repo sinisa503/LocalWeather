@@ -17,8 +17,7 @@
         <TextView
             android:id="@+id/detail_view_date_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="JUNE 24" />
+            android:layout_height="wrap_content" />
 
 
         <LinearLayout
@@ -38,7 +37,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="21"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
@@ -47,7 +45,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
                     android:layout_marginLeft="8dp"
-                    android:text="8"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
@@ -69,8 +66,7 @@
                     android:id="@+id/detail_view_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="CLEAR" />
+                    android:layout_gravity="center" />
             </LinearLayout>
         </LinearLayout>
 
@@ -78,21 +74,18 @@
             android:id="@+id/list_item_humidity_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="HUMIDITY: 84%" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/list_item_wind_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="WIND: 6km/H NW" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/list_item_pressure_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PRESSURE: 1014 hpa" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </ScrollView>
