@@ -16,6 +16,7 @@ public class ForecastAdapter extends CursorAdapter{
 
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_TOMOROW = 1;
+    private boolean mUseTodayLayout = true;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -38,7 +39,9 @@ public class ForecastAdapter extends CursorAdapter{
         view.setTag(viewHolder);
         return view;
     }
-
+    public void setUseTodayLayout(boolean mUseTodayLayout) {
+        this.mUseTodayLayout = mUseTodayLayout;
+    }
     /*
         This is where we fill-in the views with the contents of the cursor.
      */
@@ -71,7 +74,7 @@ public class ForecastAdapter extends CursorAdapter{
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0) ? VIEW_TYPE_TODAY : VIEW_TYPE_TOMOROW;
+        return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_TOMOROW;
     }
 
     @Override

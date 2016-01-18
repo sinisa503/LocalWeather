@@ -28,6 +28,7 @@ import data.WeatherContract;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private boolean mUseTodayLayout;
     private final static int FORECAST_LOADER = 0;
     private static final String[] FORECAST_COLUMNS = {
             // In this case the id needs to be fully qualified with a table name, since
@@ -59,6 +60,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public static final int COL_COORD_LONG = 8;
 
     private ForecastAdapter mForecastAdapter;
+    private ListView mListView;
+    private int mListPosition = ListView.INVALID_POSITION;
+    private final static String LIST_POSITION_TAG = "selected_position";
 
     public interface Callback{
         void onItemSelected(Uri dateUri);
@@ -76,13 +80,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
 
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
 
-        listView.setAdapter(mForecastAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setAdapter(mForecastAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // CursorAdapter returns a cursor at the correct position for getItem(), or null
@@ -98,9 +101,22 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     ((Callback)getActivity()).onItemSelected(WeatherContract.WeatherEntry
                     .buildWeatherLocationWithDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)));
                 }
+                mListPosition = position;
             }
         });
+        if (savedInstanceState != null && savedInstanceState.containsKey(LIST_POSITION_TAG) ){
+            mListPosition = savedInstanceState.getInt(LIST_POSITION_TAG);
+        }
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mListPosition != ListView.INVALID_POSITION){
+            outState.putInt(LIST_POSITION_TAG, mListPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -166,10 +182,21 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> cursorloader, Cursor data) {
         mForecastAdapter.swapCursor(data);
+        if (mListPosition != ListView.INVALID_POSITION){
+            mListView.smoothScrollToPosition(mListPosition);
+            mListView.setSelection(mListPosition);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mForecastAdapter.swapCursor(null);
+    }
+
+    public void setTodayLayout(boolean useTodayLayout){
+        this.mUseTodayLayout = useTodayLayout;
+        if (mForecastAdapter != null){
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
     }
 }

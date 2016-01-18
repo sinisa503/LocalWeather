@@ -81,7 +81,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_view_day_textview);
         mDateView = (TextView) rootView.findViewById(R.id.detail_view_date_textview);
-        mDescriptionView = (TextView) rootView.findViewById(R.id.detail_view_description);
+        mDescriptionView = (TextView) rootView.findViewById(R.id.detail_description_textview);
         mHighTempView = (TextView) rootView.findViewById(R.id.list_item_high_textview);
         mLowTempView = (TextView) rootView.findViewById(R.id.list_item_low_textview);
         mHumidityView = (TextView) rootView.findViewById(R.id.list_item_humidity_textview);
