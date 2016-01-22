@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import fragments.DetailFragment;
+import com.example.android.sunshine.fragments.DetailFragment;
 
 
 public class DetailActivity extends ActionBarActivity {

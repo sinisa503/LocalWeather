@@ -90,10 +90,23 @@
     <string name="action_share">Share</string>
     <string name="today">Today</string>
     <string name="tomorow">Tomorow</string>
+
     <string name="format_full_friendly_date">
         <xliff:g id="day">%1$s</xliff:g>,<xliff:g id="date">%2$s</xliff:g>
     </string>
     <string name="format_temperature">
         <xliff:g id="temp">%1.0f</xliff:g>\u00B0
+    </string>
+    <string name="format_wind_Mph">Wind:
+        <xliff:g id="speed">%1$s</xliff:g> mph
+    </string>
+    <string name="format_humidity">Humidity:
+    <xliff:g id="humidity">%1$s</xliff:g>
+    </string>
+    <string name="format_wind_Kmh">Wind:
+        <xliff:g id="speed">%1$s</xliff:g> kmh <xliff:g id="direction">%2$s</xliff:g>
+    </string>
+    <string name="format_pressure">Pressure:
+        <xliff:g id="pressure">%1$s</xliff:g>
     </string>
 </resources>

@@ -92,7 +92,7 @@ public class Utility {
     }
 
     public static int getImageFromDrawable(int weatherId) {
-        // Based on weather code data found at:
+        // Based on weather code com.example.android.sunshine.data found at:
         // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
         if (weatherId >= 200 && weatherId <= 232) {
             return R.drawable.ic_stock_weather_storm;

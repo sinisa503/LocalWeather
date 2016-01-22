@@ -16,10 +16,6 @@ import android.os.Build;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import data.WeatherContract;
-import data.WeatherDbHelper;
-import data.WeatherProvider;
-
 
 /*
     Note: This is not a complete set of tests of the Sunshine ContentProvider, but it does test
@@ -168,7 +164,7 @@ public class TestProvider extends AndroidTestCase {
 
     /*
         This test uses the database directly to insert and then uses the ContentProvider to
-        read out the data.  Uncomment this test to see if the basic weather query functionality
+        read out the com.example.android.sunshine.data.  Uncomment this test to see if the basic weather query functionality
         given in the ContentProvider is working correctly.
      */
     public void testBasicWeatherQuery() {
@@ -202,7 +198,7 @@ public class TestProvider extends AndroidTestCase {
 
     /*
         This test uses the database directly to insert and then uses the ContentProvider to
-        read out the data.  Uncomment this test to see if your location queries are
+        read out the com.example.android.sunshine.data.  Uncomment this test to see if your location queries are
         performing correctly.
      */
     public void testBasicLocationQueries() {
@@ -234,7 +230,7 @@ public class TestProvider extends AndroidTestCase {
     }
 
     /*
-        This test uses the provider to insert and then update the data. Uncomment this test to
+        This test uses the provider to insert and then update the com.example.android.sunshine.data. Uncomment this test to
         see if your update location is functioning correctly.
      */
     public void testUpdateLocation() {
@@ -357,11 +353,11 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.validateCursor("testInsertReadProvider. Error validating WeatherEntry insert.",
                 weatherCursor, weatherValues);
 
-        // Add the location values in with the weather data so that we can make
+        // Add the location values in with the weather com.example.android.sunshine.data so that we can make
         // sure that the join worked and we actually get all the values back
         weatherValues.putAll(testValues);
 
-        // Get the joined Weather and Location data
+        // Get the joined Weather and Location com.example.android.sunshine.data
         weatherCursor = mContext.getContentResolver().query(
                 WeatherContract.WeatherEntry.buildWeatherLocation(TestUtilities.TEST_LOCATION),
                 null, // leaving "columns" null just returns all the columns.
@@ -372,7 +368,7 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location Data.",
                 weatherCursor, weatherValues);
 
-        // Get the joined Weather and Location data with a start date
+        // Get the joined Weather and Location com.example.android.sunshine.data with a start date
         weatherCursor = mContext.getContentResolver().query(
                 WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
                         TestUtilities.TEST_LOCATION, TestUtilities.TEST_DATE),
@@ -384,7 +380,7 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location Data with start date.",
                 weatherCursor, weatherValues);
 
-        // Get the joined Weather data for a specific date
+        // Get the joined Weather com.example.android.sunshine.data for a specific date
         weatherCursor = mContext.getContentResolver().query(
                 WeatherContract.WeatherEntry.buildWeatherLocationWithDate(TestUtilities.TEST_LOCATION, TestUtilities.TEST_DATE),
                 null,
@@ -392,7 +388,7 @@ public class TestProvider extends AndroidTestCase {
                 null,
                 null
         );
-        TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location data for a specific date.",
+        TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location com.example.android.sunshine.data for a specific date.",
                 weatherCursor, weatherValues);
     }
 

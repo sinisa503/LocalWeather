@@ -15,11 +15,8 @@ import com.example.android.sunshine.utils.PollingCheck;
 import java.util.Map;
 import java.util.Set;
 
-import data.WeatherContract;
-import data.WeatherDbHelper;
-
 /*
-    Students: These are functions and some test data to make it easier to test your database and
+    Students: These are functions and some test com.example.android.sunshine.data to make it easier to test your database and
     Content Provider.  Note that you'll want your WeatherContract class to exactly match the one
     in our solution to use these as-given.
  */

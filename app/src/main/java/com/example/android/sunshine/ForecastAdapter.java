@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import fragments.ForecastFragment;
+import com.example.android.sunshine.fragments.ForecastFragment;
 
 /**
  * Created by SINISA on 28.11.2015..

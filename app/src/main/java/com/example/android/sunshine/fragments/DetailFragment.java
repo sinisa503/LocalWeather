@@ -1,4 +1,4 @@
-package fragments;
+package com.example.android.sunshine.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.example.android.sunshine.R;
 import com.example.android.sunshine.Utility;
 
-import data.WeatherContract;
+import com.example.android.sunshine.data.WeatherContract;
 
 /**
  * Created by SINISA on 11.1.2016..
@@ -159,14 +159,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String wind = data.getString(COL_WEATHER_WIND_SPEED);
         String pressure = data.getString(COL_WEATHER_PRESSURE);
 
+
         mFriendlyDateView.setText(friendlyDay);
         mDateView.setText(date);
         mDescriptionView.setText(description);
         mHighTempView.setText(highTemp);
         mLowTempView.setText(lowTemp);
-        mHumidityView.setText(humidity);
-        mWindView.setText(wind);
-        mPressureview.setText(pressure);
+        mHumidityView.setText(getActivity().getString(R.string.format_humidity,humidity));
+        mWindView.setText(getActivity().getString(R.string.format_wind_Mph, wind));
+        mPressureview.setText(getActivity().getString(R.string.format_pressure,pressure));
         mIconView.setImageResource(Utility.getImageFromDrawable(weatherId));
 
         if (mShareActionProvider != null) {

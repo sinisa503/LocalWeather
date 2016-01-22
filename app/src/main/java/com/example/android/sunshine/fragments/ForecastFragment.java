@@ -1,5 +1,8 @@
-package fragments;
+package com.example.android.sunshine.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,9 +24,8 @@ import com.example.android.sunshine.ForecastAdapter;
 import com.example.android.sunshine.R;
 import com.example.android.sunshine.SettingsActivity;
 import com.example.android.sunshine.Utility;
-
-import data.FetchWeatherTask;
-import data.WeatherContract;
+import com.example.android.sunshine.data.WeatherContract;
+import com.example.android.sunshine.service.SunshineService;
 
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -93,11 +95,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
-//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-//                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-//                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-//                            ));
-//                    startActivity(intent);
                     ((Callback)getActivity()).onItemSelected(WeatherContract.WeatherEntry
                     .buildWeatherLocationWithDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)));
                 }
@@ -147,9 +144,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             case R.id.settings:
                 Intent i = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(i);
-                return true;
+                return false;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     public void onLocationChanged( ) {
@@ -158,9 +155,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String cityCode = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(cityCode);
+        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
+
+        PendingIntent pendingIntent = PendingIntent
+                .getBroadcast(getActivity(),0,alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+3000, pendingIntent);
+
     }
 
     @Override
@@ -184,7 +186,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter.swapCursor(data);
         if (mListPosition != ListView.INVALID_POSITION){
             mListView.smoothScrollToPosition(mListPosition);
-            mListView.setSelection(mListPosition);
         }
     }
 

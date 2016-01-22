@@ -22,9 +22,6 @@ import android.test.AndroidTestCase;
 
 import java.util.HashSet;
 
-import data.WeatherContract;
-import data.WeatherDbHelper;
-
 public class TestDb extends AndroidTestCase {
 
     public static final String LOG_TAG = TestDb.class.getSimpleName();
@@ -208,7 +205,7 @@ public class TestDb extends AndroidTestCase {
         // from the query
         assertTrue( "Error: No Records returned from location query", cursor.moveToFirst() );
 
-        // Fifth Step: Validate data in resulting Cursor with the original ContentValues
+        // Fifth Step: Validate com.example.android.sunshine.data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
         TestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",

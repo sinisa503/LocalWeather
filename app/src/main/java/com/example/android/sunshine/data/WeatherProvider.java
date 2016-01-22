@@ -1,4 +1,4 @@
-package data;
+package com.example.android.sunshine.data;
 
 /**
  * Created by SINISA on 10.11.2015..

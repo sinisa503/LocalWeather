@@ -10,10 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import fragments.DetailFragment;
-import fragments.ForecastFragment;
+import com.example.android.sunshine.fragments.DetailFragment;
+import com.example.android.sunshine.fragments.ForecastFragment;
 
-public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback{
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private static final String DETAIL_FRAGMENT_TAG = "DFTAG";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -26,16 +26,17 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         mLocation = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
 
-        if (findViewById(R.id.weather_detail_container) != null){
+        if (findViewById(R.id.weather_detail_container) != null) {
             mTwoPane = true;
-            if (savedInstanceState == null){
+            if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.weather_detail_container, new DetailFragment(), DETAIL_FRAGMENT_TAG).commit();
             }
-        }else {
+        } else {
             mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
         }
-        ForecastFragment forecastFragment = (ForecastFragment)getSupportFragmentManager()
+        ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast);
         forecastFragment.setTodayLayout(!mTwoPane);
     }
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         }
         return super.onOptionsItemSelected(item);
     }
-    public void openPreferredLocation() {
+
+    private void openPreferredLocation() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String location = sharedPreferences.getString(getString(R.string.pref_location_key),
                 getString(R.string.pref_location_default));
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         intent.setData(geoLocation);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
-        }else {
+        } else {
             Log.d("Sinisa", "Couldn't call: " + location + ", no reciveing apps instaled");
         }
     }
@@ -84,15 +85,15 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation(this);
-        if (location != null && location.equals(mLocation)){
-            ForecastFragment forecastFragment = (ForecastFragment)getSupportFragmentManager()
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.fragment_forecast);
-            if (null != forecastFragment){
+            if (null != forecastFragment) {
                 forecastFragment.onLocationChanged();
             }
-            DetailFragment detailFragment = (DetailFragment)getSupportFragmentManager().findFragmentByTag(
+            DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentByTag(
                     DETAIL_FRAGMENT_TAG);
-            if (detailFragment != null){
+            if (null != detailFragment) {
                 detailFragment.onLocationChanged(location);
             }
             mLocation = location;
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
     @Override
     public void onItemSelected(Uri dateUri) {
-        if (mTwoPane){
+        if (mTwoPane) {
             Bundle bundle = new Bundle();
             bundle.putParcelable(DetailFragment.DETAIL_URI, dateUri);
 
@@ -109,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             detailFragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container,
-                    detailFragment,DETAIL_FRAGMENT_TAG).commit();
-        }else {
+                    detailFragment, DETAIL_FRAGMENT_TAG).commit();
+        } else {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.setData(dateUri);
             startActivity(intent);
