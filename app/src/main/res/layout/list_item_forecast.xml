@@ -61,4 +61,5 @@
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:textAppearanceSmall"/>
     </LinearLayout>
+
 </LinearLayout>

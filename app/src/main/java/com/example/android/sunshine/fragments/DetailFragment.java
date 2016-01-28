@@ -143,35 +143,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v(LOG_TAG, "onLoadFinished");
-        if (!data.moveToFirst()) {
-            return;
-        }
-        int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
-        boolean isMetric = Utility.isMetric(getActivity());
-        String date = Utility.formatDate(data.getLong(COL_WEATHER_DATE));
-        String highTemp = Utility.formatTemperature(getActivity().getBaseContext(),data.getDouble(COL_WEATHER_MAX_TEMP),isMetric);
-        String lowTemp = Utility.formatTemperature(getActivity().getBaseContext(),data.getDouble(COL_WEATHER_MIN_TEMP),isMetric);
+        if (data != null && data.moveToFirst()) {
+            int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
+            String date = Utility.formatDate(data.getLong(COL_WEATHER_DATE));
+            String highTemp = Utility.formatTemperature(getActivity().getBaseContext(), data.getDouble(COL_WEATHER_MAX_TEMP));
+            String lowTemp = Utility.formatTemperature(getActivity().getBaseContext(), data.getDouble(COL_WEATHER_MIN_TEMP));
 
 
-        String friendlyDay = Utility.getFriendlyDayString(getActivity().getBaseContext(),data.getLong(COL_WEATHER_DATE));
-        String description = data.getString(COL_WEATHER_DESC);
-        String humidity = data.getString(COL_WEATHER_HUMIDITY);
-        String wind = data.getString(COL_WEATHER_WIND_SPEED);
-        String pressure = data.getString(COL_WEATHER_PRESSURE);
+            String friendlyDay = Utility.getFriendlyDayString(getActivity().getBaseContext(), data.getLong(COL_WEATHER_DATE));
+            String description = data.getString(COL_WEATHER_DESC);
+            String humidity = data.getString(COL_WEATHER_HUMIDITY);
+            String wind = data.getString(COL_WEATHER_WIND_SPEED);
+            String pressure = data.getString(COL_WEATHER_PRESSURE);
 
 
-        mFriendlyDateView.setText(friendlyDay);
-        mDateView.setText(date);
-        mDescriptionView.setText(description);
-        mHighTempView.setText(highTemp);
-        mLowTempView.setText(lowTemp);
-        mHumidityView.setText(getActivity().getString(R.string.format_humidity,humidity));
-        mWindView.setText(getActivity().getString(R.string.format_wind_Mph, wind));
-        mPressureview.setText(getActivity().getString(R.string.format_pressure,pressure));
-        mIconView.setImageResource(Utility.getImageFromDrawable(weatherId));
+            mFriendlyDateView.setText(friendlyDay);
+            mDateView.setText(date);
+            mDescriptionView.setText(description);
+            mHighTempView.setText(highTemp);
+            mLowTempView.setText(lowTemp);
+            mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+            mWindView.setText(getActivity().getString(R.string.format_wind_Mph, wind));
+            mPressureview.setText(getActivity().getString(R.string.format_pressure, pressure));
+            mIconView.setImageResource(Utility.getImageFromDrawable(weatherId));
 
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
+            if (mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(createShareForecastIntent());
+            }
         }
     }
 
