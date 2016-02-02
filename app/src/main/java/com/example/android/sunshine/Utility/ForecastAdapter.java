@@ -1,4 +1,4 @@
-package com.example.android.sunshine;
+package com.example.android.sunshine.utility;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.sunshine.R;
 import com.example.android.sunshine.fragments.ForecastFragment;
 
 /**
@@ -16,6 +17,7 @@ public class ForecastAdapter extends CursorAdapter{
 
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_TOMOROW = 1;
+    private static final int VIEW_TYPE_COUNT = 2;
     private boolean mUseTodayLayout = true;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
@@ -50,20 +52,29 @@ public class ForecastAdapter extends CursorAdapter{
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
 
-        viewHolder.iconView.setImageResource(Utility.getImageFromDrawable(cursor.getInt(
-                ForecastFragment.COL_WEATHER_CONDITION_ID
-        )));
+        int viewType = getItemViewType(cursor.getPosition());
+        switch (viewType) {
+            case VIEW_TYPE_TODAY: {
+                // Get weather icon
+                viewHolder.iconView.setImageResource(Utility.getImageFromDrawable(
+                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                break;
+            }
+            case VIEW_TYPE_TOMOROW: {
+                // Get weather icon
+                viewHolder.iconView.setImageResource(Utility.getImageFromDrawable(
+                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                break;
+            }
+        }
 
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
-
-
         viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
 
         String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
         viewHolder.descriptionView.setText(description);
 
         double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-
         viewHolder.highTempView.setText(Utility.formatTemperature(context, high));
 
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
@@ -77,6 +88,6 @@ public class ForecastAdapter extends CursorAdapter{
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return VIEW_TYPE_COUNT;
     }
 }

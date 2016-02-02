@@ -17,12 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.sunshine.ForecastAdapter;
 import com.example.android.sunshine.R;
-import com.example.android.sunshine.Utility;
 import com.example.android.sunshine.data.WeatherContract;
+import com.example.android.sunshine.sync.LocalWeaherSyncAdapter;
+import com.example.android.sunshine.utility.ForecastAdapter;
+import com.example.android.sunshine.utility.Utility;
 
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -138,17 +140,18 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 openPreferredLocation();
                 return true;
 //            case R.id.action_refresh:
-//                updateWeather();
+//                updateWeater();
 //                return true;
 //            case R.id.settings:
 //                Intent i = new Intent(getActivity(), SettingsActivity.class);
 //                startActivity(i);
 //                return false;
-            }
+        }
         return super.onOptionsItemSelected(item);
     }
 
     public void onLocationChanged() {
+        updateWeater();
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
@@ -160,7 +163,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //                .getBroadcast(getActivity(),0,alarmIntent, PendingIntent.FLAG_ONE_SHOT);
 //        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+3000, pendingIntent);
-       // LocalWeaherSyncAdapter.syncImmediately(getActivity());
+        LocalWeaherSyncAdapter.syncImmediately(getActivity());
     }
 
     private void openPreferredLocation() {
@@ -179,7 +182,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getContext(),"Couldn't call: "
+                    Toast.makeText(getContext(), "Couldn't call: "
                             + geoLocation.toString() + ", no reciveing apps instaled", Toast.LENGTH_SHORT).show();
                     Log.d(LOG_TAG, "Couldn't call: " + geoLocation.toString() + ", no reciveing apps instaled");
                 }
@@ -209,6 +212,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (mListPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mListPosition);
         }
+        updateEmptyView();
     }
 
     @Override
@@ -220,6 +224,19 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         this.mUseTodayLayout = useTodayLayout;
         if (mForecastAdapter != null) {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
+    }
+
+    private void updateEmptyView() {
+        if (mForecastAdapter.getCount() == 0) {
+            TextView tv = (TextView) getView().findViewById(R.id.list_view_forecast_empty);
+            if (null != tv) {
+                int messagge = R.string.empty_forecast_list;
+                if (!Utility.isNetworkConnected(getActivity())) {
+                    messagge = R.string.no_network_info;
+                }
+                tv.setText(messagge);
+            }
         }
     }
 }

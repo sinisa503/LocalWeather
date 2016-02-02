@@ -1,11 +1,13 @@
-package com.example.android.sunshine;
+package com.example.android.sunshine.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.sunshine.R;
 import com.example.android.sunshine.fragments.DetailFragment;
 
 
@@ -15,6 +17,11 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.appBar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(DetailFragment.DETAIL_URI,getIntent().getData());

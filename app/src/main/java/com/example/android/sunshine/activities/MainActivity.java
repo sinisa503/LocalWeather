@@ -1,15 +1,18 @@
-package com.example.android.sunshine;
+package com.example.android.sunshine.activities;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.sunshine.R;
 import com.example.android.sunshine.fragments.DetailFragment;
 import com.example.android.sunshine.fragments.ForecastFragment;
 import com.example.android.sunshine.sync.LocalWeaherSyncAdapter;
+import com.example.android.sunshine.utility.Utility;
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
@@ -24,18 +27,24 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         mLocation = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.appBar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         if (findViewById(R.id.weather_detail_container) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction().replace(
-                        R.id.weather_detail_container, new DetailFragment(), DETAIL_FRAGMENT_TAG).commit();
+                        R.id.weather_detail_container, new DetailFragment(), DETAIL_FRAGMENT_TAG)
+                        .commit();
             }
         } else {
             mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
-        ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_forecast);
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setTodayLayout(!mTwoPane);
 
         LocalWeaherSyncAdapter.initializeSyncadapter(this);

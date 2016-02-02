@@ -24,11 +24,12 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.android.sunshine.BuildConfig;
-import com.example.android.sunshine.MainActivity;
+import com.example.android.sunshine.activities.MainActivity;
 import com.example.android.sunshine.R;
-import com.example.android.sunshine.Utility;
+import com.example.android.sunshine.utility.Utility;
 import com.example.android.sunshine.data.WeatherContract;
 
 import org.json.JSONArray;
@@ -336,7 +337,7 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
                     double low = cursor.getDouble(INDEX_MIN_TEMP);
                     String description = cursor.getString(INDEX_SHORT_DESC);
 
-                    int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
+                    int iconId = Utility.getImageFromDrawable(weatherId);
                     String title = context.getString(R.string.app_name);
 
                     String notificationText = String.format(context.getString(R.string.format_notification),
@@ -432,6 +433,8 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
 
         // If the password doesn't exist, the account doesn't exist
         if (null == accountManager.getPassword(newAccount)) {
+
+            Toast.makeText(context, "No account", Toast.LENGTH_LONG);
 
         /*
          * Add the account and account type, no password or user data

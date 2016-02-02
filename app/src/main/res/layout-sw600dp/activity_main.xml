@@ -3,22 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:baselineAligned="false"
-    android:divider="?android:attr/dividerHorizontal"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
-    <fragment
-        android:layout_width="0dp"
+    <include layout="@layout/app_bar"
+        android:id="@+id/appBar"/>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:name="com.example.android.sunshine.fragments.ForecastFragment"
-        android:id="@+id/fragment_forecast"/>
+        android:baselineAligned="false"
+        android:divider="?android:attr/dividerHorizontal"
+        android:orientation="horizontal"
+        tools:context=".activities.MainActivity">
 
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:id="@+id/weather_detail_container"/>
+        <fragment
+            android:id="@+id/fragment_forecast"
+            android:name="com.example.android.sunshine.fragments.ForecastFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout="@android:layout/list_content"
+            tools:targetApi="honeycomb" />
 
+        <FrameLayout
+            android:id="@+id/weather_detail_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4" />
+
+    </LinearLayout>
 </LinearLayout>

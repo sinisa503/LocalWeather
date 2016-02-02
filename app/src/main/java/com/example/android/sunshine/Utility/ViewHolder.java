@@ -1,8 +1,10 @@
-package com.example.android.sunshine;
+package com.example.android.sunshine.utility;
 
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.android.sunshine.R;
 
 /**
  * Created by SINISA on 10.1.2016..
