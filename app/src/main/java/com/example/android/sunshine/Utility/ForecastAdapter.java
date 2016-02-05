@@ -44,9 +44,7 @@ public class ForecastAdapter extends CursorAdapter{
     public void setUseTodayLayout(boolean mUseTodayLayout) {
         this.mUseTodayLayout = mUseTodayLayout;
     }
-    /*
-        This is where we fill-in the views with the contents of the cursor.
-     */
+
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
@@ -55,13 +53,11 @@ public class ForecastAdapter extends CursorAdapter{
         int viewType = getItemViewType(cursor.getPosition());
         switch (viewType) {
             case VIEW_TYPE_TODAY: {
-                // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getImageFromDrawable(
                         cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 break;
             }
             case VIEW_TYPE_TOMOROW: {
-                // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getImageFromDrawable(
                         cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 break;

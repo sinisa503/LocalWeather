@@ -22,23 +22,17 @@ import android.widget.Toast;
 
 import com.example.android.sunshine.R;
 import com.example.android.sunshine.data.WeatherContract;
-import com.example.android.sunshine.sync.LocalWeaherSyncAdapter;
+import com.example.android.sunshine.sync.LocalWeatherSyncAdapter;
 import com.example.android.sunshine.utility.ForecastAdapter;
 import com.example.android.sunshine.utility.Utility;
 
-
+//Fetching the forecast and displaying it as a listView
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private boolean mUseTodayLayout;
     private final static int FORECAST_LOADER = 0;
     private static final String[] FORECAST_COLUMNS = {
-            // In this case the id needs to be fully qualified with a table name, since
-            // the content provider joins the location & weather tables in the background
-            // (both have an _id column)
-            // On the one hand, that's annoying.  On the other, you can search the weather table
-            // using the location set by the user, which is only in the Location table.
-            // So the convenience is worth it.
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
             WeatherContract.WeatherEntry.COLUMN_DATE,
             WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
@@ -49,8 +43,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             WeatherContract.LocationEntry.COLUMN_COORD_LAT,
             WeatherContract.LocationEntry.COLUMN_COORD_LONG
     };
-    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
-    // must change.
+    // These indices are tied to FORECAST_COLUMNS
     public static final int COL_WEATHER_ID = 0;
     public static final int COL_WEATHER_DATE = 1;
     public static final int COL_WEATHER_DESC = 2;
@@ -67,10 +60,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private int mListPosition = ListView.INVALID_POSITION;
     private final static String LIST_POSITION_TAG = "selected_position";
 
+    //Sending notification about the item click to the Main activity
+    //Main activity will notify Detail Fragment or Detail Activity through method onItemSelected
     public interface Callback {
         void onItemSelected(Uri dateUri);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +81,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
 
-        /*In case the view is empty there is a custom empty list*/
+        //In case the view is empty there is a custom empty list
         View emptyView = rootView.findViewById(R.id.list_view_forecast_empty);
         mListView.setEmptyView(emptyView);
 
@@ -156,14 +150,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeater() {
-//        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-//        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
-//
-//        PendingIntent pendingIntent = PendingIntent
-//                .getBroadcast(getActivity(),0,alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+3000, pendingIntent);
-        LocalWeaherSyncAdapter.syncImmediately(getActivity());
+/*        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
+
+        PendingIntent pendingIntent = PendingIntent
+                .getBroadcast(getActivity(),0,alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+3000, pendingIntent);*/
+        LocalWeatherSyncAdapter.syncImmediately(getActivity());
     }
 
     private void openPreferredLocation() {

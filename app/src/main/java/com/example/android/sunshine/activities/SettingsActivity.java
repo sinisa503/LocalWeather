@@ -12,12 +12,13 @@ import android.preference.PreferenceManager;
 
 import com.example.android.sunshine.R;
 
-public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener{
+public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_general);
+
         bindPreferenceSummary(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummary(findPreference(getString(R.string.pref_units_key)));
     }
@@ -43,6 +44,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         }
         return true;
     }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public Intent getParentActivityIntent(){

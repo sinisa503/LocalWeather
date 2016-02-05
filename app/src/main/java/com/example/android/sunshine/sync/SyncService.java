@@ -11,15 +11,15 @@ import android.util.Log;
  */
 public class SyncService extends Service {
     private static final Object sSyncAdapterLock = new Object();
-    private static LocalWeaherSyncAdapter localWeaherSyncAdapter = null;
+    private static LocalWeatherSyncAdapter localWeatherSyncAdapter = null;
 
 
     @Override
     public void onCreate() {
         Log.d("SyncService", "onCreate - SyncService");
         synchronized (sSyncAdapterLock) {
-            if (localWeaherSyncAdapter == null) {
-                localWeaherSyncAdapter = new LocalWeaherSyncAdapter(getApplicationContext(), true);
+            if (localWeatherSyncAdapter == null) {
+                localWeatherSyncAdapter = new LocalWeatherSyncAdapter(getApplicationContext(), true);
             }
         }
     }
@@ -27,6 +27,6 @@ public class SyncService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return localWeaherSyncAdapter.getSyncAdapterBinder();
+        return localWeatherSyncAdapter.getSyncAdapterBinder();
     }
 }

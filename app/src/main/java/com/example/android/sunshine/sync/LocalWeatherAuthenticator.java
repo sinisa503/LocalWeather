@@ -11,17 +11,16 @@ import android.os.Bundle;
  * Created by SINISA on 22.1.2016..
  */
 public class LocalWeatherAuthenticator extends AbstractAccountAuthenticator {
-    // Simple constructor
+
     public LocalWeatherAuthenticator(Context context) {
         super(context);
     }
-    // Editing properties is not supported
     @Override
     public Bundle editProperties(
             AccountAuthenticatorResponse r, String s) {
         throw new UnsupportedOperationException();
     }
-    // Don't add additional accounts
+
     @Override
     public Bundle addAccount(
             AccountAuthenticatorResponse r,
@@ -31,7 +30,7 @@ public class LocalWeatherAuthenticator extends AbstractAccountAuthenticator {
             Bundle bundle) throws NetworkErrorException {
         return null;
     }
-    // Ignore attempts to confirm credentials
+
     @Override
     public Bundle confirmCredentials(
             AccountAuthenticatorResponse r,
@@ -39,7 +38,7 @@ public class LocalWeatherAuthenticator extends AbstractAccountAuthenticator {
             Bundle bundle) throws NetworkErrorException {
         return null;
     }
-    // Getting an authentication token is not supported
+
     @Override
     public Bundle getAuthToken(
             AccountAuthenticatorResponse r,
@@ -48,12 +47,12 @@ public class LocalWeatherAuthenticator extends AbstractAccountAuthenticator {
             Bundle bundle) throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
-    // Getting a label for the auth token is not supported
+
     @Override
     public String getAuthTokenLabel(String s) {
         throw new UnsupportedOperationException();
     }
-    // Updating user credentials is not supported
+
     @Override
     public Bundle updateCredentials(
             AccountAuthenticatorResponse r,
@@ -61,7 +60,7 @@ public class LocalWeatherAuthenticator extends AbstractAccountAuthenticator {
             String s, Bundle bundle) throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
-    // Checking features for the account is not supported
+
     @Override
     public Bundle hasFeatures(
             AccountAuthenticatorResponse r,

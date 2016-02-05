@@ -8,21 +8,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.sunshine.R;
-import com.example.android.sunshine.utility.Utility;
 import com.example.android.sunshine.data.WeatherContract;
+import com.example.android.sunshine.utility.Utility;
 
 /**
  * Created by SINISA on 11.1.2016..
@@ -62,8 +58,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_WEATHER_CONDITION_ID = 9;
 
     private ImageView mIconView;
-    private TextView mFriendlyDateView,mDateView,mDescriptionView,mHighTempView,mLowTempView,
-            mHumidityView,mWindView,mPressureview;
+    private TextView mFriendlyDateView,mDescriptionView,mHighTempView,mLowTempView,
+            mHumidityView,mWindView,mPressureview, cityNameBig;
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
@@ -71,6 +67,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Get bundle from Main or Detail activity
         Bundle arguments = getArguments();
         if (arguments != null){
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
@@ -78,8 +75,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+        cityNameBig = (TextView)rootView.findViewById(R.id.city_name_big);
         mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_view_day_textview);
-        mDateView = (TextView) rootView.findViewById(R.id.detail_view_date_textview);
         mDescriptionView = (TextView) rootView.findViewById(R.id.detail_description_textview);
         mHighTempView = (TextView) rootView.findViewById(R.id.list_item_high_textview);
         mLowTempView = (TextView) rootView.findViewById(R.id.list_item_low_textview);
@@ -91,21 +88,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.detailfragment, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.action_share);
-
-        mShareActionProvider = (ShareActionProvider)
-                MenuItemCompat.getActionProvider(menuItem);
-
-        if (mForecast != null) {
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
-        } else {
-            Log.d("Sinisa", "Share action provider is null");
-        }
-    }
 
     private Intent createShareForecastIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -146,18 +128,20 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
             mIconView.setImageResource(Utility.getImageFromDrawable(weatherId));
 
+            String cityString = Utility.getPreferredLocation(getActivity()).toUpperCase();
+            cityNameBig.setText(cityString);
+
             //Set text to day of the week and date
             long date = data.getLong(COL_WEATHER_DATE);
-            String friendlyDateTxt = Utility.getDayName(getActivity(), date);
+            String friendlyDateTxt = Utility.getFriendlyDayString(getActivity(), date);
             String dateText = Utility.getFormattedMonthDay(getActivity(), date);
             mFriendlyDateView.setText(friendlyDateTxt);
-            mDateView.setText(dateText);
 
             //Read description from cursor and update view
             String description = data.getString(COL_WEATHER_DESC);
             mDescriptionView.setText(description);
 
-            // For accessibility, add a content description to the icon field
+            // Add a content description to the icon field
             mIconView.setContentDescription(description);
 
             //Read high temperature and update view

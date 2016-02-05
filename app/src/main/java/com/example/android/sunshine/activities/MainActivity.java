@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.example.android.sunshine.R;
 import com.example.android.sunshine.fragments.DetailFragment;
 import com.example.android.sunshine.fragments.ForecastFragment;
-import com.example.android.sunshine.sync.LocalWeaherSyncAdapter;
+import com.example.android.sunshine.sync.LocalWeatherSyncAdapter;
 import com.example.android.sunshine.utility.Utility;
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (findViewById(R.id.weather_detail_container) != null) {
+            //The detail layout will be present only in larger screens.
+            // In this case the activity should be in two pane mode.
             mTwoPane = true;
+            //Place the Detail fragment in detail container if activity is in two pane
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.weather_detail_container, new DetailFragment(), DETAIL_FRAGMENT_TAG)
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setTodayLayout(!mTwoPane);
 
-        LocalWeaherSyncAdapter.initializeSyncadapter(this);
+        LocalWeatherSyncAdapter.initializeSyncadapter(this);
     }
 
     @Override
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation(this);
+        //Update location if it changes(Settings activity)
         if (location != null && !location.equals(mLocation)) {
             ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.fragment_forecast);
@@ -88,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
     @Override
     public void onItemSelected(Uri dateUri) {
+        // In two-pane mode, show the detail view in this activity by
+        // adding or replacing the detail fragment
         if (mTwoPane) {
             Bundle bundle = new Bundle();
             bundle.putParcelable(DetailFragment.DETAIL_URI, dateUri);
@@ -97,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
             getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container,
                     detailFragment, DETAIL_FRAGMENT_TAG).commit();
+            //In one pane mode call DetailActivity
         } else {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.setData(dateUri);

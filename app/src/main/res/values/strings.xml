@@ -69,13 +69,13 @@
     <string name="format_wind_mph">Wind:
         <xliff:g id="speed">%1$s</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g>
     </string>
-    <string name="format_humidity">Humidity:
+    <string name="format_humidity">
     <xliff:g id="humidity">%1$s</xliff:g>
     </string>
-    <string name="format_wind_kmh">Wind:
+    <string name="format_wind_kmh">
         <xliff:g id="speed">%1$s</xliff:g> kmh <xliff:g id="direction">%2$s</xliff:g>
     </string>
-    <string name="format_pressure">Pressure:
+    <string name="format_pressure">
         <xliff:g id="pressure">%1$s</xliff:g>
     </string>
     <string name="format_notification">Forecast:

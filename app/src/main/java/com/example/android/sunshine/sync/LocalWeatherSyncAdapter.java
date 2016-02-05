@@ -47,9 +47,9 @@ import java.util.Vector;
 /**
  * Created by SINISA on 22.1.2016..
  */
-public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
+public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
 
-    private static final String LOG_TAG = LocalWeaherSyncAdapter.class.getSimpleName();
+    private static final String LOG_TAG = LocalWeatherSyncAdapter.class.getSimpleName();
     public static final int SYNC_INTERVAL = 60 * 108;
     public static final int SYNC_FLEX_TIME = SYNC_INTERVAL / 3;
     private static final int DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
@@ -68,7 +68,7 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int INDEX_SHORT_DESC = 3;
 
 
-    public LocalWeaherSyncAdapter(Context context, boolean autoInitialize) {
+    public LocalWeatherSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
     }
 
@@ -88,8 +88,6 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
             final String FORECAST_BASE_URL =
                     "http://api.openweathermap.org/data/2.5/forecast/daily?";
             final String QUERY_PARAM = "q";
@@ -117,7 +115,6 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
-                // Nothing to do.
                 return;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -128,15 +125,12 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             if (buffer.length() == 0) {
-                // Stream was empty.  No point in parsing.
                 return;
             }
             forecastJsonStr = buffer.toString();
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the weather com.example.android.sunshine.data, there's no point in attemping
-            // to parse it.
             return;
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
@@ -160,34 +154,19 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
                                             String locationSetting)
             throws JSONException {
 
-        // Now we have a String representing the complete forecast in JSON Format.
-        // Fortunately parsing is easy:  constructor takes the JSON string and converts it
-        // into an Object hierarchy for us.
-
-        // These are the names of the JSON objects that need to be extracted.
-
-        // Location information
         final String OWM_CITY = "city";
         final String OWM_CITY_NAME = "name";
         final String OWM_COORD = "coord";
-
-        // Location coordinate
         final String OWM_LATITUDE = "lat";
         final String OWM_LONGITUDE = "lon";
-
-        // Weather information.  Each day's forecast info is an element of the "list" array.
         final String OWM_LIST = "list";
-
         final String OWM_PRESSURE = "pressure";
         final String OWM_HUMIDITY = "humidity";
         final String OWM_WINDSPEED = "speed";
         final String OWM_WIND_DIRECTION = "deg";
-
-        // All temperatures are children of the "temp" object.
         final String OWM_TEMPERATURE = "temp";
         final String OWM_MAX = "max";
         final String OWM_MIN = "min";
-
         final String OWM_WEATHER = "weather";
         final String OWM_DESCRIPTION = "main";
         final String OWM_WEATHER_ID = "id";
@@ -210,15 +189,11 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
 
             Time dayTime = new Time();
             dayTime.setToNow();
-
-            // we start at the day returned by local time. Otherwise this is a mess.
             int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
-
-            // now we work exclusively in UTC
             dayTime = new Time();
 
             for (int i = 0; i < weatherArray.length(); i++) {
-                // These are the values that will be collected.
+
                 long dateTime;
                 double pressure;
                 int humidity;
@@ -231,10 +206,8 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
                 String description;
                 int weatherId;
 
-                // Get the JSON object representing the day
                 JSONObject dayForecast = weatherArray.getJSONObject(i);
 
-                // Cheating to convert this to UTC time, which is what we want anyhow
                 dateTime = dayTime.setJulianDay(julianStartDay + i);
 
                 pressure = dayForecast.getDouble(OWM_PRESSURE);
@@ -242,15 +215,11 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
                 windSpeed = dayForecast.getDouble(OWM_WINDSPEED);
                 windDirection = dayForecast.getDouble(OWM_WIND_DIRECTION);
 
-                // Description is in a child array called "weather", which is 1 element long.
-                // That element also contains a weather code.
                 JSONObject weatherObject =
                         dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
                 description = weatherObject.getString(OWM_DESCRIPTION);
                 weatherId = weatherObject.getInt(OWM_WEATHER_ID);
 
-                // Temperatures are in a child object called "temp".  Try not to name variables
-                // "temp" when working with temperature.  It confuses everybody.
                 JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
                 high = temperatureObject.getDouble(OWM_MAX);
                 low = temperatureObject.getDouble(OWM_MIN);
@@ -274,11 +243,10 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
             int inserted = 0;
             // add to database
             if (cVVector.size() > 0) {
-                // Student: call bulkInsert to add the weatherEntries to the database here
+
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
                 getContext().getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
-                //delete old data
                 getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
                         WeatherContract.WeatherEntry.COLUMN_DATE + "<= ?",new String[]{Long.toString(julianStartDay-1)});
 
@@ -403,8 +371,6 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
 
     /**
      * Helper method to have the sync adapter sync immediately
-     *
-     * @param context The context used to access the account service
      */
     public static void syncImmediately(Context context) {
         Bundle bundle = new Bundle();
@@ -436,19 +402,9 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
 
             Toast.makeText(context, "No account", Toast.LENGTH_LONG);
 
-        /*
-         * Add the account and account type, no password or user data
-         * If successful, return the Account object, otherwise report an error.
-         */
             if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
                 return null;
             }
-            /*
-             * If you don't set android:syncable="true" in
-             * in your <provider> element in the manifest,
-             * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
-             * here.
-             */
             onAccountCreated(newAccount, context);
         }
         return newAccount;
@@ -470,7 +426,7 @@ public class LocalWeaherSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private static void onAccountCreated(Account account, Context context) {
-        LocalWeaherSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEX_TIME);
+        LocalWeatherSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEX_TIME);
         ContentResolver.setSyncAutomatically(account, context.getString(R.string.content_authority), true);
         syncImmediately(context);
     }
