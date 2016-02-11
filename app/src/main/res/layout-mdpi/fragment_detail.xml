@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    app:columnCount="2"
+    app:rowCount="7">
+
+
+    <android.support.v4.widget.Space
+        android:layout_marginBottom="16dp"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1" />
+
+    <TextView
+        android:id="@+id/city_name_big"
+        android:layout_margin="16dp"
+        android:text="Zagreb"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_columnSpan="2"
+        app:layout_gravity="center" />
+
+
+    <TextView
+        android:id="@+id/detail_view_day_textview"
+        android:layout_marginBottom="16dp"
+        android:text="January 25,"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_gravity="center"
+        app:layout_columnSpan="2"
+        app:layout_columnWeight="1" />
+
+
+    <ImageView
+        android:id="@+id/list_item_icon"
+        android:src="@drawable/ic_sun"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/list_item_high_textview"
+        android:text="20%"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="36sp"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/detail_description_textview"
+        android:layout_marginBottom="16dp"
+        android:text="Clear"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="21sp"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/list_item_low_textview"
+        android:layout_marginBottom="16dp"
+        android:text="6%"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="21sp"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center" />
+
+    <android.support.v4.widget.Space
+        app:layout_columnSpan="2"
+        app:layout_rowWeight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingTop="16dp"
+        app:layout_columnSpan="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Humidity:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/list_item_humidity_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="66 %"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pressure:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/list_item_pressure_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="992 hPa"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Wind:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/list_item_wind_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="1 km/h SW"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.GridLayout>
