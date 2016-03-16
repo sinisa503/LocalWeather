@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.sunshine" >
+    package="com.example.android.localweather" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.example.android.localweather.activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/ForecastTheme">
             <intent-filter>
@@ -25,26 +25,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DetailActivity"
+            android:name="com.example.android.localweather.activities.DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName="com.example.android.localweather.activities.MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value="com.example.android.localweather.activities.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name="com.example.android.localweather.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName="com.example.android.localweather.activities.MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value="com.example.android.localweather.activities.MainActivity"/>
         </activity>
         <provider
             android:authorities="@string/content_authority"
             android:syncable="true"
             android:exported="false"
-            android:name=".data.WeatherProvider"/>
+            android:name="com.example.android.localweather.data.WeatherProvider"/>
 
-        <service android:name=".sync.AuthenticatorService">
+        <service android:name="com.example.android.localweather.sync.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -53,7 +53,7 @@
                 android:resource="@xml/authenticator"/>
         </service>
 
-        <service android:name=".sync.SyncService"
+        <service android:name="com.example.android.localweather.sync.SyncService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
