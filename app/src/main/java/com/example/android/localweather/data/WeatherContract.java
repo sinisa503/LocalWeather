@@ -68,10 +68,10 @@ public class WeatherContract {
         public static final String COLUMN_LOC_KEY = "location_id";
         // Date, stored as long in milliseconds
         public static final String COLUMN_DATE = "date";
-        // Weather id as returned by API, to identify the icon to be used
+        // Weather id as returned by server, to identify the icon to be used
         public static final String COLUMN_WEATHER_ID = "weather_id";
 
-        // Short description of the weather, provided by API.
+        // Short description of the weather, provided by server.
         public static final String COLUMN_SHORT_DESC = "short_desc";
 
         // Min and max temperatures for the day (stored as floats)
@@ -81,7 +81,7 @@ public class WeatherContract {
         public static final String COLUMN_HUMIDITY = "humidity";
         public static final String COLUMN_PRESSURE = "pressure";
         public static final String COLUMN_WIND_SPEED = "wind";
-        // Degrees are meteorological degrees (e.g, 0 is north, 180 is south).  Stored as floats.
+        // Degrees are meteorological degrees (0 is north, 180 is south).  Stored as floats.
         public static final String COLUMN_DEGREES = "degrees";
 
         public static Uri buildWeatherUri(long id) {
@@ -92,8 +92,7 @@ public class WeatherContract {
             return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
         }
 
-        public static Uri buildWeatherLocationWithStartDate(
-                String locationSetting, long startDate) {
+        public static Uri buildWeatherLocationWithStartDate(String locationSetting, long startDate) {
             long normalizedDate = normalizeDate(startDate);
             return CONTENT_URI.buildUpon().appendPath(locationSetting)
                     .appendQueryParameter(COLUMN_DATE, Long.toString(normalizedDate)).build();

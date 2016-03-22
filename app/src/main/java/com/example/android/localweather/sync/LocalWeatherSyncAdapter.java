@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
@@ -27,10 +28,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.android.localweather.BuildConfig;
-import com.example.android.localweather.activities.MainActivity;
 import com.example.android.localweather.R;
-import com.example.android.localweather.utility.Utility;
+import com.example.android.localweather.activities.MainActivity;
 import com.example.android.localweather.data.WeatherContract;
+import com.example.android.localweather.utility.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
@@ -67,6 +70,16 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int INDEX_MIN_TEMP = 2;
     private static final int INDEX_SHORT_DESC = 3;
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({LOCATION_STATUS_OK, LOCATION_STATUS_SERVER_DOWN,
+            LOCATION_STATUS_SERVER_INVALID, LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_INVALID})
+    public @interface LocationStatus{}
+
+    public static final int LOCATION_STATUS_OK = 0;
+    public static final int LOCATION_STATUS_SERVER_DOWN = 1;
+    public static final int LOCATION_STATUS_SERVER_INVALID = 2;
+    public static final int LOCATION_STATUS_UNKNOWN = 3;
+    public static final int LOCATION_STATUS_INVALID = 4;
 
     public LocalWeatherSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -125,16 +138,20 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             if (buffer.length() == 0) {
+                setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
                 return;
             }
             forecastJsonStr = buffer.toString();
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
+            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
             return;
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
             e.printStackTrace();
+            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
+            return;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -150,7 +167,7 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
         return;
     }
 
-    private String[] getWeatherDataFromJson(String forecastJsonStr,
+    private void getWeatherDataFromJson(String forecastJsonStr,
                                             String locationSetting)
             throws JSONException {
 
@@ -170,9 +187,25 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OWM_WEATHER = "weather";
         final String OWM_DESCRIPTION = "main";
         final String OWM_WEATHER_ID = "id";
+        final String OWM_MESSAGGE_CODE = "cod";
 
         try {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
+
+            if (forecastJson.has(OWM_MESSAGGE_CODE)){
+                int error_code = forecastJson.getInt(OWM_MESSAGGE_CODE);
+                switch (error_code){
+                    case HttpURLConnection.HTTP_OK:
+                        break;
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        setLocationStatus(getContext(), LOCATION_STATUS_INVALID);
+                        break;
+                    default:
+                        setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
+                        return;
+                }
+            }
+
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
@@ -252,7 +285,7 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 notifyWeather();
             }
-
+            setLocationStatus(getContext(), LOCATION_STATUS_OK);
             // Sort order:  Ascending, by date.
             String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
             Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
@@ -276,8 +309,8 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
         }
-        return null;
     }
 
     private void notifyWeather() {
@@ -434,4 +467,12 @@ public class LocalWeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     public static void initializeSyncadapter(Context context) {
         getSyncAccount(context);
     }
+
+    static private void setLocationStatus(Context c, @LocationStatus int locationStatus){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(c.getString(R.string.pref_location_status_key), locationStatus);
+        editor.commit();
+    }
 }
+

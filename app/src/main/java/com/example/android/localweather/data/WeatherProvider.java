@@ -154,7 +154,6 @@ public class WeatherProvider extends ContentProvider {
         if (rowsDeleted != 0){
             getContext().getContentResolver().notifyChange(uri,null);
         }
-        // Student: return the actual rows deleted
         return rowsDeleted;
     }
 
@@ -223,8 +222,7 @@ public class WeatherProvider extends ContentProvider {
         );
     }
 
-    private Cursor getWeatherByLocationSettingAndDate(
-            Uri uri, String[] projection, String sortOrder) {
+    private Cursor getWeatherByLocationSettingAndDate(Uri uri, String[] projection, String sortOrder) {
         String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
         long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
 

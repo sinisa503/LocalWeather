@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.appBar);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         if (findViewById(R.id.weather_detail_container) != null) {
             //The detail layout will be present only in larger screens.
@@ -74,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation(this);
+        getSupportActionBar().setTitle(Utility.buildFirstLetterUppercase(location));
         //Update location if it changes(Settings activity)
         if (location != null && !location.equals(mLocation)) {
             ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager()

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/sunshine_dark_blue</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="android:preferenceScreenStyle">@style/PrefsTheme</item>
     </style>
 
     <style name="ForecastTheme" parent="AppTheme">
@@ -26,6 +27,16 @@
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+    </style>
+
+    <style name="PrefsTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@color/grey</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:listViewStyle">@style/listViewPrefs</item>
+    </style>
+    <style name="listViewPrefs" parent="@android:style/Widget.ListView">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:cacheColorHint">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

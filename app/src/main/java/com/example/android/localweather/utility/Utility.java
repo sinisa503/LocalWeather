@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.text.format.Time;
 
 import com.example.android.localweather.R;
+import com.example.android.localweather.sync.LocalWeatherSyncAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -54,7 +55,7 @@ public class Utility {
         int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
 
         if (julianDay == currentJulianDay) {
-            String today = context.getString(R.string.today);
+            String today = getDayName(context, dateInMillis);
             int formatId = R.string.format_full_friendly_date;
             return String.format(context.getString(
                     formatId, today, getFormattedMonthDay(context, dateInMillis)));
@@ -81,16 +82,17 @@ public class Utility {
         int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
         int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
 
-        if (julianDay == currentJulianDay) {
-            return context.getString(R.string.today);
-        } else if (julianDay == currentJulianDay + 1) {
-            return context.getString(R.string.tomorow);
-        } else {
-            Time time = new Time();
-            time.setToNow();
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-            return dayFormat.format(dateInMillis);
-        }
+//        if (julianDay == currentJulianDay) {
+//            return context.getString(R.string.today);
+//        } else if (julianDay == currentJulianDay + 1) {
+//            return context.getString(R.string.tomorow);
+//        } else {
+        Time time = new Time();
+        time.setToNow();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+        String dateString = dayFormat.format(dateInMillis);
+        return buildFirstLetterUppercase(dateString);
+        //}
     }
 
     public static int getImageFromDrawable(int weatherId) {
@@ -152,9 +154,47 @@ public class Utility {
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
 
-    public static boolean isNetworkConnected(Context context){
+    public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
+    @SuppressWarnings("ResourceType")
+    static public
+    @LocalWeatherSyncAdapter.LocationStatus
+    int getLocationStatus(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getInt(context.getString(R.string.pref_location_status_key),
+                LocalWeatherSyncAdapter.LOCATION_STATUS_UNKNOWN);
+    }
+
+    public static void resetLocationStatus(Context c) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(c.getString(R.string.pref_location_status_key), LocalWeatherSyncAdapter.LOCATION_STATUS_UNKNOWN);
+        editor.apply();
+    }
+
+    public static String buildFirstLetterUppercase(String word) {
+        char[] array = word.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            char c;
+            if (i == 0) {
+                c = array[i];
+                builder.append(String.valueOf(c).toUpperCase());
+            } else {
+                c = array[i];
+                builder.append(String.valueOf(c).toLowerCase());
+            }
+        }
+        return builder.toString();
+    }
+//    public static boolean isLocationLatLonAvailable(Context context) {
+//        SharedPreferences prefs
+//                = PreferenceManager.getDefaultSharedPreferences(context);
+//        return prefs.contains(context.getString(R.string.pref_location_latitude))
+//                && prefs.contains(context.getString(R.string.pref_location_longitude));
+//    }
 }

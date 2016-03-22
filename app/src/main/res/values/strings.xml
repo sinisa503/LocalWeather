@@ -48,7 +48,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="pref_location_default">zagreb</string>
+    <string name="pref_location_default">Zagreb</string>
     <string name="pref_location_key">location</string>
     <string name="pref_location_label">City Name</string>
     <string name="temperature_units">Temperature units</string>
@@ -82,15 +82,24 @@
     <xliff:g id="condition">%1$s</xliff:g>High: <xliff:g id="high">%2$s</xliff:g>Low: <xliff:g id="low">%3$s</xliff:g>
     </string>
     <string name="pref_last_notification">last_notification</string>
-
-    <!-- Strings related to Notification Enabled preference -->
     <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
     <string name="pref_enable_notifications_label">Weather Notifications</string>
-
+    <string name="pref_location_status_key" translatable="false">loc-status</string>
     <string name="pref_enable_notifications_true">Enabled</string>
     <string name="pref_enable_notifications_false">Not Enabled</string>
     <string name="pref_enable_notifications_default" translatable="false">true</string>
     <string name="empty_forecast_list">No Weather Information Available</string>
-    <string name="action_refresh">refresh</string>
+    <string name="no_connection_available">No connection Available or connection slow</string>
+        <string name="action_refresh">refresh</string>
+    <string name="empty_forecast_list_invalid_location">No weather information available. The location in settings is not recognized by the weather server.</string>
     <string name="no_network_info">No weather information available. There is no network!</string>
+    <string name="empty_forecast_list_server_down">No weather information available. The server is not returning data.</string>
+    <string name="empty_forecast_list_server_error">No weather information available. The server is not returning valid data. Please check for an updated version of Sunshine.</string>
+    <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="finish">Finish Settings</string>
+    <string name="finish_pref_key">finishPreference</string>
+    <string name="pref_current_loc_desc">Image for edit text places</string>
+    <string name="google_app_id">AIzaSyB5h1BqR__aFSiL6Uh5hhFpFph5lIomvF0</string>
+    <string name="attribution_text">Powered by Google</string>
 </resources>
