@@ -66,7 +66,7 @@
     <string name="format_temperature">
         <xliff:g id="temp">%1.0f</xliff:g>\u00B0
     </string>
-    <string name="format_wind_mph">Wind:
+    <string name="format_wind_mph">
         <xliff:g id="speed">%1$s</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g>
     </string>
     <string name="format_humidity">
